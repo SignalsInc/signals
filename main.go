@@ -6,9 +6,8 @@ import (
 	"log"
     "net/http"
 	"github.com/gorilla/mux"
-	"github.com/FoundationDB/fdb-go/fdb"
+	"github.com/SignalsInc/fdb-go/fdb"
 )
-
 
 func PostSignalHandler(ctx *Context, writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
@@ -41,8 +40,9 @@ func GetSignalHandler(ctx *Context, writer http.ResponseWriter, request *http.Re
 
 func main() {
 	ctx := NewContext()
-	ctx.router.Methods("GET").Path("/signals/{key}").Handler(ContextHandler{ctx, GetSignalHandler})
-	ctx.router.Methods("POST").Path("/signals/{key}/{value}").Handler(ContextHandler{ctx, PostSignalHandler})
+	ctx.router.Methods("GET").Path("/channels/{key}").Handler(ContextHandler{ctx, GetSignalHandler})
+	ctx.router.Methods("POST").Path("/channels/{key}/{value}").Handler(ContextHandler{ctx, PostSignalHandler})
+	ctx.router.Methods("GET").Path("/static").Handler(http.FileServer(http.Dir("/Users/jhuffaker/Projects/go/src/github.com/SignalsInc/ssignal/static")))
 	http.ListenAndServe(":8080", ctx.router)
 }
 
